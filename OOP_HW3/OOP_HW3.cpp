@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <string>
+#include <cassert>
 
 using namespace std;
 
@@ -12,13 +13,18 @@ using namespace std;
 class Figure
 {
 public:
+	Figure()
+	{
+		cout << "Figure::Figure()\n\n";
+	}
+	
 	virtual double area() = 0;
 };
 
 class Parallelogram : public Figure
 {
-	double a;
-	double h;
+	double a = 0;
+	double h = 0;
 
 public:
 
@@ -26,14 +32,17 @@ public:
 	{
 		cout << "Parallelogram::Parallelogram()\n\n";
 	}
-
-	void setValues()
+	
+	Parallelogram(double sa, double sh)
+		:a(sa), h(sh)
 	{
-		cout << "Enter size of parallelogram's base: ";
-		cin >> a;
-		cout << "\nEnter size of parallelogram's height: ";
-		cin >> h;
-		cout << endl;
+
+	}
+	
+	void setValues(double sa, double sh)
+	{
+		a = sa;
+		h = sh;
 	}
 
 	double area()
@@ -45,7 +54,7 @@ public:
 
 class Circle : public Figure
 {
-	double r;
+	double r = 0;
 
 public:
 
@@ -53,12 +62,16 @@ public:
 	{
 		cout << "Circle::Circle()\n\n";
 	}
-
-	void setRadius()
+	
+	Circle(double sr)
+		:r(sr)
 	{
-		cout << "Enter radius of the circle: ";
-		cin >> r;
-		cout << endl;
+
+	}
+
+	void setRadius(double sr)
+	{
+		r = sr;
 	}
 
 	double area()
@@ -70,8 +83,8 @@ public:
 
 class Rectangle : public Parallelogram
 {
-	double a;
-	double b;
+	double a = 0;
+	double b = 0;
 
 public:
 
@@ -79,14 +92,17 @@ public:
 	{
 		cout << "Rectangle::Rectangle()\n\n";
 	}
-
-	void setValues()
+	
+	Rectangle(double sa, double sb, double pa, double ph)
+		:a(sa), b(sb), Parallelogram(pa, ph)
 	{
-		cout << "Enter the size of the first side of the rectangle: ";
-		cin >> a;
-		cout << "\nEnter the size of the second side of the rectangle: ";
-		cin >> b;
-		cout << endl;
+
+	}
+
+	void setValues(double sa, double sb)
+	{
+		a = sa;
+		b = sb;
 	}
 
 	double area()
@@ -98,7 +114,7 @@ public:
 
 class Square : public Parallelogram
 {
-	double a;
+	double a = 0;
 
 public:
 
@@ -106,12 +122,16 @@ public:
 	{
 		cout << "Square::Square()\n\n";
 	}
-
-	void setValue()
+	
+	Square(double sa, double pa, double ph)
+		:a(sa), Parallelogram(pa, ph)
 	{
-		cout << "Enter the size of square side: ";
-		cin >> a;
-		cout << endl;
+
+	}
+	
+	void setValue(double sa)
+	{
+		a = sa;
 	}
 
 	double area()
@@ -123,8 +143,8 @@ public:
 
 class Rhombus : public Parallelogram
 {
-	double a;
-	double h;
+	double a = 0;
+	double h = 0;
 
 public:
 
@@ -132,14 +152,17 @@ public:
 	{
 		cout << "Rhombus::Rhombus()\n\n";
 	}
-
-	void setValues()
+	
+	Rhombus(double sa, double sh, double pa, double ph)
+		:a(sa), h(sh), Parallelogram(pa, ph)
 	{
-		cout << "Enter size of the rhombus side: ";
-		cin >> a;
-		cout << "\nEnter size of the rhombus height: ";
-		cin >> h;
-		cout << endl;
+
+	}
+
+	void setValues(double sa, double sh)
+	{
+		a = sa;
+		h = sh;
 	}
 
 	double area()
@@ -166,9 +189,10 @@ protected:
 
 public:
 
+	//Конструкторы такого типа делал для наглядности ("посмотреть, в какой последовательности выполняются конструкторы")
 	Car()
 	{
-		cout << "Car::Car()\n\n";
+		cout << "Car::Car()\n\n";	
 	}
 
 	Car(string nameC, string nameM)
@@ -198,10 +222,9 @@ public:
 	}
 
 	PassengerCar(string nameC, string nameM)
+		:Car(nameC, nameM)
 	{
-		Company = nameC;
-		Model = nameM;
-		cout << "Company:\t" << Company << "\n\nModel:\t\t" << Model << "\n\n";
+		cout << "Company:\t" << this->Company << "\n\nModel:\t\t" << this->Model << "\n\n";
 	}
 };
 
@@ -215,10 +238,9 @@ public:
 	}
 
 	Bus(string nameC, string nameM)
+		:Car(nameC, nameM)
 	{
-		Company = nameC;
-		Model = nameM;
-		cout << "Company:\t" << Company << "\n\nModel:\t\t" << Model << "\n\n";
+		cout << "Company:\t" << Bus::Company << "\n\nModel:\t\t" << Bus::Model << "\n\n";
 	}
 };
 
@@ -227,10 +249,9 @@ class Minivan : public PassengerCar, public Bus
 public:
 
 	Minivan(string nameC, string nameM)
+		:Car(nameC, nameM)
 	{
-		Company = nameC;
-		Model = nameM;
-		cout << "Company:\t" << Company << "\n\nModel:\t\t" << Model << "\n\n";
+		cout << "Company:\t" << this->Company << "\n\nModel:\t\t" << this->Model << "\n\n";
 	}
 };
 
@@ -254,25 +275,22 @@ public:
 
 	Fraction(int numerator, int denominator)
 	{
+		assert(denominator != 0);
 		this->numerator = numerator;
 		this->denominator = denominator;
 	}
 
-	void setValues()
+	void setNumerator(int numerator)
 	{
-		cout << "Enter a numerator: ";
-		cin >> numerator; 
-
-		while (true)
-		{
-			cout << "Enter a denominator: ";
-			cin >> denominator;
-
-			if (denominator != 0)
-				return;
-			else
-				cout << "Denominator cannot be equal to a zero! Try again.\n\n";
-		}
+		this->numerator = numerator;
+	}
+	
+	void setDenominator(int denominator)
+	{
+		if (denominator != 0)
+			this->denominator = denominator;
+		else
+			cout << "Denominator cannot be equal to a zero! Try again.\n\n";
 	}
 
 	void Print()
@@ -343,7 +361,9 @@ class Card
 	enum Suit { TAMBOURINE, SPADE, CLUBS, HEARTS};
 	enum Value { ACE, KING, QUEEN, JACK, TEN, NINE, EIGHT, SEVEN, SIX, FIVE, FOUR, THREE, TWO };
 	bool Position = false;
-
+	Value value;
+	Suit suit;
+	
 public:
 
 	void Flip()
@@ -354,7 +374,7 @@ public:
 			Position = true;
 	}
 
-	int getValue(Value& value)
+	int getValue() const
 	{
 		switch (value)
 		{
@@ -382,26 +402,26 @@ int main()
 {
 	cout << "============EX.1============\n\n";
 
-	//Parallelogram pa;
-	//Rectangle re;
-	//Circle ci;
-	//Square sq;
-	//Rhombus rh;
+	Parallelogram pa(3.3, 4);
+	Rectangle re(4.2, 3.3, 2.2, 4.4);
+	Circle ci(3.3);
+	Square sq (4.1, 2.5, 7.3);
+	Rhombus rh (7.1, 1.1, 2.2, 3.3);
 
-	//pa.setValues();
-	//re.setValues();
-	//ci.setRadius();
-	//sq.setValue();
-	//rh.setValues();
+	/*pa.setValues(2.5, 4);
+	re.setValues(3.3, 2.1);
+	ci.setRadius(4);
+	sq.setValue(2.5);
+	rh.setValues(6.2, 3.4);*/
 
-	//cout << "Parallelogram area = " << pa.area() << "\n\nRectangle area = " << re.area() << "\n\nCircle area = " << ci.area() << "\n\nSquare area = " << sq.area() << "\n\nRhombus area = " << rh.area() << "\n\n";
+	cout << "Parallelogram area = " << pa.area() << "\n\nRectangle area = " << re.area() << "\n\nCircle area = " << ci.area() << "\n\nSquare area = " << sq.area() << "\n\nRhombus area = " << rh.area() << "\n\n";
 
 	cout << "\n\n============EX.2============\n\n";
 
-	//Car car("Audi", "80");
-	//PassengerCar pCar("Audi", "R8");
-	//Bus bus("Mercedes-Benz", "Sprinter");
-	//Minivan minivan("Toyota", "Alphard");
+	Car car("Audi", "80");
+	PassengerCar pCar("Audi", "R8");
+	Bus bus("Mercedes-Benz", "Sprinter");
+	Minivan minivan("Toyota", "Alphard");
 	
 	cout << "\n\n============EX.3============\n\n";
 
